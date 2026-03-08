@@ -1,9 +1,22 @@
+# ファイルパスを扱うためのライブラリでOS共通で動作
+from pathlib import Path
+
 # Task一覧を取得する関数
 def showTasklist():
     for i, todo in enumerate(todolist, 1):
-                print(i, todo)
+                print(f"{i}: {todo}")
                 
 print("ToDoアプリを起動しました")
+
+# todo_data.txtのパスをpへ代入
+path = Path("todo_data.txt")
+
+# todo_data.txtがなかったら新規作成
+if not path.exists():
+    with open("todo_data.txt", "w"): 
+        pass
+
+# 空のリストを作成
 todolist = []
 
 while True:
@@ -31,8 +44,15 @@ while True:
             todolist.pop(int(delTask) - 1)
             print("タスクを削除しました。")
         elif n == 4:
-            print("終了します")
+            print("終了します") 
+            
+            # タスクをtodo_add.txtへ書き込む
+            with path.open("w") as f:
+                for i, todo in enumerate(todolist, 1):
+                    f.write(f"{i}: {todo}\n")
+                
             break
+        
         else:
             print("間違った数字が入力されました。")
     except ValueError:
