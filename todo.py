@@ -4,20 +4,26 @@ from pathlib import Path
 # Task一覧を取得する関数
 def showTasklist():
     for i, todo in enumerate(todolist, 1):
-                print(f"{i}: {todo}")
+        print(f"{i}: {todo}")
                 
 print("ToDoアプリを起動しました")
 
-# todo_data.txtのパスをpへ代入
+# todo_data.txtのパスをpathへ代入
+# この時点でファイル名「todo_data.txt」
+# という名前のファイルを作成する必要があると認識している
 path = Path("todo_data.txt")
 
 # todo_data.txtがなかったら新規作成
-if not path.exists():
-    with open("todo_data.txt", "w"): 
-        pass
+# touchメソッドでファイルの存在＋からファイル作成
+path.touch(exist_ok=True)
 
 # 空のリストを作成
 todolist = []
+
+# todo_data.txtを読み込む
+# リストの内包表記で記述
+with path.open("r") as f:
+    todolist = [line.strip() for line in f.readlines()]
 
 while True:
     print("何をする？ 1: 追加 2: 確認 3: 削除 4: 終了")
@@ -47,9 +53,10 @@ while True:
             print("終了します") 
             
             # タスクをtodo_add.txtへ書き込む
+            # 書き込み時は番号を追加しない
             with path.open("w") as f:
-                for i, todo in enumerate(todolist, 1):
-                    f.write(f"{i}: {todo}\n")
+                for todo in todolist:
+                    f.write(f"{todo}\n")
                 
             break
         
